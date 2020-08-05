@@ -4,9 +4,18 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const keys = require('../../config/keys');
 const User = require('../../models/User');
+const passport = require('passport');
 
 router.get("/", (req, res) => {
     res.json({ msg: "This is the users route" });
+});
+
+router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
+    res.json({
+        id: req.user.id,
+        handle: req.user.handle,
+        email: req.user.email
+    });
 });
 
 router.post('/register', (req, res) => {
@@ -35,7 +44,7 @@ router.post('/register', (req, res) => {
                 })
             }
         })
-})
+});
 
 router.post('/login', (req, res) => {
     const userName = req.body.userName;
@@ -68,6 +77,6 @@ router.post('/login', (req, res) => {
                     }
                 })
         })
-})
+});
 
 module.exports = router;
