@@ -5,6 +5,8 @@ const jwt = require('jsonwebtoken');
 const keys = require('../../config/keys');
 const User = require('../../models/User');
 const passport = require('passport');
+const validateRegisterInput = require('../../validation/register');
+const validateLoginInput = require('../../validation/login');
 
 router.get("/", (req, res) => {
     res.json({ msg: "This is the users route" });
@@ -19,6 +21,12 @@ router.get('/current', passport.authenticate('jwt', { session: false }), (req, r
 });
 
 router.post('/register', (req, res) => {
+    const { errors, isValid } = validateRegisterInput(req.body);
+
+    if (!isValid) {
+        return res.status(400).json(errors);
+    }
+
     // Check to make sure nobody has already registered with a duplicate email
     User.findOne({ email: req.body.email })
         .then(user => {
