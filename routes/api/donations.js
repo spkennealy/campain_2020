@@ -16,6 +16,12 @@ router.get('/donations/:donationId', passport.authenticate('jwt', { session: fal
     });
 });
 
+router.get('/donations/:donationId', passport.authenticate('jwt', { session: false }), (req, res) => {
+    res.json({
+        id: req.donation.id
+    });
+});
+
 router.post('/donations', (req, res) => {
     
 });
