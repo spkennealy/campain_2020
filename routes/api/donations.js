@@ -13,25 +13,25 @@ router.get("/donations", (req, res) => {
 
 router.get('/donations/:donationId', 
     passport.authenticate('jwt', { session: false }), 
-    (req, res) => {
-        Donation.findById(req.donation.id)
-            .then(({ donationId, userId, donationAmount, organizationId, donationDate }) => {
-                
-            })
+        (req, res) => {
+            Donation.findById(req.donation.id)
+                .then(({ donationId, userId, donationAmount, organizationId, donationDate }) => {
+                    return res.json({ donationId, userId, donationAmount, organizationId, donationDate});
+                });
 });
 
-router.get('/donations/:donationId', passport.authenticate('jwt', { session: false }), (req, res) => {
-    res.json({
-        id: req.donation.id
-    });
-});
-
-router.post('/donations', (req, res) => {
-    
+router.post('/donations',
+    passport.authenticate('jwt', { session: false }),
+        (req, res) => {
+            res.send(req.body);
 });
 
 router.put('/donations/:donationId', (req, res) => {
-    
+    passport.authenticate('jwt', { session: false }),
+        (req, res) => {
+            Donation.findById(req.donation.id)
+                .then()
+        };
 });
 
 router.delete('/donations/:donationId', (req, res) => {
