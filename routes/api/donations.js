@@ -30,7 +30,23 @@ router.put('/donations/:donationId', (req, res) => {
     passport.authenticate('jwt', { session: false }),
         (req, res) => {
             Donation.findById(req.donation.id)
-                .then()
+                .then(donation => {
+                    donation.userId = req.donation.userId;
+                    donation.organizationId = req.donation.organizationId;
+                    donation.donationAmount = req.donation.donationAmount;
+                    donation.donationDate = req.donation.donationDate;
+
+                    donation.save()
+                        .then(({ donation }) => {
+                            return res.json({
+                                id: donation.id,
+                                userId: donation.userId,
+                                organizationId: donation.organizationId,
+                                donationAmount: donation.donationAmount,
+                                donationDate: donation.donationAmount
+                            })
+                        })
+                })
         };
 });
 
