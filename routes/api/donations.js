@@ -23,7 +23,7 @@ router.get('/donations/:donationId',
 router.post('/donations',
     passport.authenticate('jwt', { session: false }),
         (req, res) => {
-            res.send(req.body);
+            res.json(req.body);
 });
 
 router.put('/donations/:donationId', (req, res) => {
@@ -35,6 +35,7 @@ router.put('/donations/:donationId', (req, res) => {
                     donation.organizationId = req.donation.organizationId;
                     donation.donationAmount = req.donation.donationAmount;
                     donation.donationDate = req.donation.donationDate;
+                    donation.markModified();
 
                     donation.save()
                         .then(({ donation }) => {
@@ -51,7 +52,13 @@ router.put('/donations/:donationId', (req, res) => {
 });
 
 router.delete('/donations/:donationId', (req, res) => {
-
+    passport.authenticate('jwt', { session: false }),
+        (req, res) => {
+            Donation.findById(req.donation.id)
+                .then(donation => {
+                    donation.deleteOne(donation._id);
+                });
+        };
 });
 
 module.exports = router;
