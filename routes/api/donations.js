@@ -8,7 +8,13 @@ const passport = require('passport');
 const Donation = require("../../models/Donation");
 
 router.get("/donations", (req, res) => {
-    
+    passport.authenticate('jwt', { session: false }),
+        (req, res) => {
+            Donation.get()
+                .then(donations => {
+                    return res.json(donations);
+                });
+            }
 });
 
 router.get('/donations/:donationId', 
